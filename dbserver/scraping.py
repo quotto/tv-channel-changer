@@ -31,7 +31,7 @@ insert_data_params = []
 
 try:
     for st in stlist:
-        driver.get('{}/listings/?a=17&d={}&st={:d}'.format(endpoint,today,st))
+        driver.get('{}/listings/17/?&d={}&st={:d}'.format(endpoint,today,st))
         res = driver.page_source.encode('utf-8')
         soup = BeautifulSoup(res,'html.parser')
         for content in soup.select('span.detail'):
@@ -50,6 +50,7 @@ try:
                             if(not(program_id in program_dict)):
                                 print('[info]{} {} {} {}'.format(program_id,time.get_text(),program.get_text(),provider.get_text()))
                                 insert_data_params.append((program_id,program.get_text(),time.get_text(),provider.get_text()))
+                                program_dict[provram_id]=True
                         else:
                             print('[warning]provider is not found at {}'.format(program.get_text()))
             except Exception as e:
@@ -61,7 +62,7 @@ try:
     
     connection.commit()
 except Exception as e:
-    print('[error]'+e)
+    print(e)
 
 finally:
     cursor.close()
