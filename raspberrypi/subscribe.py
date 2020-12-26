@@ -27,7 +27,7 @@ parser.add_argument('--signing-region', default='us-east-1', help="If you specif
     "is the region that will be used for computing the Sigv4 signature")
 parser.add_argument('--verbosity', choices=[x.name for x in io.LogLevel], default=io.LogLevel.NoLogs.name,
     help='Logging level')
-parser.add_argument('--gpio', required=True, help="GPIO Number")
+parser.add_argument('--gpio', required=True, type=int,help="GPIO Number")
 parser.add_argument('--record-file', default="./codes.json", help="Record file what recorded ir codes.")
 
 # Using globals to simplify sample code
@@ -68,7 +68,7 @@ def on_resubscribe_complete(resubscribe_future):
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, **kwargs):
     print("Received message from topic '{}': {}".format(topic, payload))
-    receivedData = json.load(payload)
+    receivedData = json.loads(payload.decoede("utf-8"))
     # Launch ir module
     irrp.playback(args.gpio,args.record_file,"channel{:d}".format(receivedData["channel"]))
     global received_count
