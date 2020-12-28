@@ -58,7 +58,7 @@ try:
                 print(traceback.format_exc())
             sleep(1)
     
-    cursor.execute()
+    cursor.execute('truncate tv_program')
     query = 'insert into tv_program (id,title,time,provider) values(?,?,?,?)'
     cursor.executemany(query,insert_data_params)
     
