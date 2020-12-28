@@ -1,3 +1,4 @@
 raspberrypi/certificate
-*/.venv
+**/.venv
 */.vscode
+skill/certificate

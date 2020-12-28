@@ -1,4 +1,5 @@
 # coding: utf-8
+import traceback
 from bs4 import BeautifulSoup
 import urllib.request
 from datetime import datetime,timezone,timedelta
@@ -25,7 +26,7 @@ options.set_headless(True)
 driver = webdriver.Chrome(chrome_options=options)
 
 endpoint = 'https://tv.yahoo.co.jp'
-stlist = [4,10,18,24]
+stlist = [4,10,16,22]
 today = datetime.now(timezone(timedelta(hours=9))).strftime('%Y%m%d')
 insert_data_params = []
 
@@ -50,19 +51,20 @@ try:
                             if(not(program_id in program_dict)):
                                 print('[info]{} {} {} {}'.format(program_id,time.get_text(),program.get_text(),provider.get_text()))
                                 insert_data_params.append((program_id,program.get_text(),time.get_text(),provider.get_text()))
-                                program_dict[provram_id]=True
+                                program_dict[program_id]=True
                         else:
                             print('[warning]provider is not found at {}'.format(program.get_text()))
             except Exception as e:
-                print('[error]'+e)
+                print(traceback.format_exc())
             sleep(1)
-
+    
+    cursor.execute()
     query = 'insert into tv_program (id,title,time,provider) values(?,?,?,?)'
     cursor.executemany(query,insert_data_params)
     
     connection.commit()
 except Exception as e:
-    print(e)
+    print(traceback.format_exc())
 
 finally:
     cursor.close()
